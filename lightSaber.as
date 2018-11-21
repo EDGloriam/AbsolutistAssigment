@@ -7,6 +7,8 @@ package
 	import flash.media.SoundChannel;
 	import flash.media.SoundTransform;
 	import flash.net.URLRequest;
+	import flash.utils.Timer;
+	import flash.events.TimerEvent;
 	
 	/**
 	 * ...
@@ -17,6 +19,7 @@ package
 		public var mcSword:MovieClip;
 		public var ray:mcRayBlue;
 		public var swordDraged:Boolean;
+		private var aBirdsArray:Array;
 		
 		public var channelForDefaultSound:SoundChannel;
 		
@@ -24,7 +27,21 @@ package
 		public function lightSaber() 
 		{
 			super();
+			
+			aBirdsArray = new Array();
+			
 			stage.addEventListener(Event.ENTER_FRAME, gameLoop);
+			
+			var tBirdTimer:Timer = new Timer(1000);
+			tBirdTimer.addEventListener(TimerEvent.TIMER, addBird);
+			tBirdTimer.start();
+		}
+		
+		private function addBird(e:TimerEvent):void 
+		{
+			var newBird:mcBirdAll = new mcBirdAll();
+			stage.addChild(newBird);
+			aBirdsArray.push(newBird);
 		}
 
 		
