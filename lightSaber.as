@@ -16,15 +16,14 @@ package
 	{
 		public var mcSword:MovieClip;
 		public var ray:mcRayBlue;
+		public var swordDraged:Boolean;
 		
 		public var channelForDefaultSound:SoundChannel;
 		
 		
 		public function lightSaber() 
 		{
-			super();	
-			var sndOnMove:Sound = new Sound();
-			var soundOnMove:URLRequest = new URLRequest("onMove.mp3");
+			super();
 			stage.addEventListener(Event.ENTER_FRAME, gameLoop);
 		}
 
@@ -32,14 +31,29 @@ package
 		private function gameLoop(e:Event):void{
 			mcSword.addEventListener(MouseEvent.MOUSE_DOWN, drag);
 			mcSword.addEventListener(MouseEvent.MOUSE_UP, drop);
+			mcSword.addEventListener(MouseEvent.MOUSE_MOVE, move);
 		}
 		
-		private function drop(e:MouseEvent):void 
+		private function move(e:MouseEvent):void 
 		{
+			var sndOnMove:Sound = new onMoveSound();
+			var transformSound:SoundTransform = new SoundTransform(0.08, 0);
+			var channelForLastSound:SoundChannel;
+			if (swordDraged == true){
+				channelForLastSound = sndOnMove.play(0, 0, transformSound);
+			}
+		}
+		
+		
+		
+		private function drop(e:MouseEvent):void
+		{
+			swordDraged = false;
 			mcSword.stopDrag();
 			mcSword.removeChild(ray);
 			channelForDefaultSound.stop();
 			playOnceOffSound();
+			
 			
 		}
 		
@@ -48,37 +62,30 @@ package
 			var sndOff:Sound = new soundClose();
 			var transformSound:SoundTransform = new SoundTransform(1, 0.60);
 			var channelOff = sndOff.play(800, 0, transformSound);
-			//channelOff.stop();
 		}
 		
 		
 		
 		private function drag(e:MouseEvent):void 
 		{
+			//пробовал добавить звук разными способами
 			var sndStart:Sound = new Sound();
 			var soundStart:URLRequest = new URLRequest("open.mp3");
 			sndStart.load(soundStart);
 			sndStart.play();
 			
 			var sndDefault:Sound = new soundDefault();
-			var transformSound:SoundTransform = new SoundTransform(1, 0.60);
+			var transformSound:SoundTransform = new SoundTransform(0.1, 0.60);
 			channelForDefaultSound = sndDefault.play(800, 100, transformSound);
-
 			mcSword.startDrag();
 			showRay();
+			swordDraged = true;
 		}
-		
-
-	
-		
-	
+			
 		private function showRay():void 
 		{
 			ray = new mcRayBlue();
-			//newMissile.x = mcPlayer.x;
-			//newMissile.y = mcPlayer.y;
 			mcSword.addChild(ray);
-			
 		}
 		
 	}

@@ -27,18 +27,21 @@ package
 		private function init():void 
 		{
 			this.height = 0;
-			addEventListener(Event.ENTER_FRAME, missileLoop);
+			addEventListener(Event.ENTER_FRAME, rayLoop);
 			addEventListener(Event.REMOVED_FROM_STAGE, onRemove);
 		}
 		
 		private function onRemove(e:Event):void 
 		{
+			// Не работает
 			removeEventListener(Event.REMOVED_FROM_STAGE, onRemove);
-			trace(this.height);
+			while (this.height > 20){
+				this.height -= 20;
+			}
 			
 		}
 		
-		private function missileLoop(e:Event):void 
+		private function rayLoop(e:Event):void 
 		{
 			if (this.height < 260){
 				this.height += 20;
