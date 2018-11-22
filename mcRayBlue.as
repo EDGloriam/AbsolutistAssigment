@@ -47,9 +47,10 @@ package
 				this.height += 20;
 			}
 		}
-		
-		
-		
+		public function destroyRay():void{
+			parent.removeChild(this);
+			removeEventListener(Event.ENTER_FRAME, rayLoop);
+		}
 		
 	}
 

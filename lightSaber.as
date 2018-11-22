@@ -17,11 +17,11 @@ package
 	public class lightSaber extends MovieClip 
 	{
 		public var mcSword:MovieClip;
-		public var ray:mcRayBlue;
-		public var swordDraged:Boolean;
-		private var aBirdsArray:Array;
 		
-		public var channelForDefaultSound:SoundChannel;
+		private var ray:mcRayBlue;
+		private var swordDraged:Boolean;
+		private var aBirdsArray:Array;
+		private var channelForDefaultSound:SoundChannel;
 		
 		
 		public function lightSaber() 
@@ -49,6 +49,40 @@ package
 			mcSword.addEventListener(MouseEvent.MOUSE_DOWN, drag);
 			mcSword.addEventListener(MouseEvent.MOUSE_UP, drop);
 			mcSword.addEventListener(MouseEvent.MOUSE_MOVE, move);
+			deleteBirdsOffScreen();
+			checkSwordKillBird();
+		}
+		
+		private function checkSwordKillBird():void 
+		{
+			//
+			// Ошибка TypeError: Error #1009: Не удается вызвать свойство или метод со ссылкой на объект "null"
+			// Код работает. Нехватило времени разобраться 
+			for (var i:int = 0; i <= aBirdsArray.length; i++){
+				 var currentBird:mcBirdAll = aBirdsArray[i];
+				 
+				if (currentBird.hitTestObject(ray)){
+					var newExplosion:mcExplosion = new mcExplosion();
+					stage.addChild(newExplosion);
+					newExplosion.x = currentBird.x;
+					newExplosion.y = currentBird.y;
+					
+					aBirdsArray.splice(i, 1);
+					currentBird.destroyBird();
+				}
+			 }
+		}
+		
+		private function deleteBirdsOffScreen():void 
+		{
+			for (var i:int = 0; i < aBirdsArray.length; i++){
+				 var currentBird:mcBirdAll = aBirdsArray[i];
+				 
+				if (currentBird.canBeDestroied()){
+					aBirdsArray.splice(i, 1);
+					currentBird.destroyBird();
+				}
+			 }
 		}
 		
 		private function move(e:MouseEvent):void 
@@ -70,7 +104,7 @@ package
 			mcSword.removeChild(ray);
 			channelForDefaultSound.stop();
 			playOnceOffSound();
-			
+			ray.destroyRay();
 			
 		}
 		

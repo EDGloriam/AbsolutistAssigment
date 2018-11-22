@@ -33,8 +33,8 @@ package
 		
 		private function setupStartPosition():void 
 		{
-			nSpeed = randomNumber(5, 10);
-			var positionX:Number = randomNumber(0 + this.width / 2, stage.width - this.width / 2 );
+			nSpeed = randomNumber(5,25);
+			var positionX:Number = randomNumber(25, 800 );
 			
 			this.y = -30;
 			this.x = positionX;
@@ -45,13 +45,26 @@ package
 		
 		private function startMoving():void 
 		{
-			addEventListener(Event.ENTER_FRAME, enemyLoop);
+			addEventListener(Event.ENTER_FRAME, birdLoop);
 		}
 		
-		private function enemyLoop(e:Event):void 
+		private function birdLoop(e:Event):void 
 		{
 			this.y += nSpeed;
 	
+		}
+		
+		public function canBeDestroied():Boolean{
+			var result:Boolean = false;
+			if ( this.y > 500){
+				result = true;
+			}
+			return result;
+		}
+		
+		public function destroyBird():void{
+			parent.removeChild(this);
+			removeEventListener(Event.ENTER_FRAME, birdLoop);
 		}
 		
 		function randomNumber(low:Number = 0, hight:Number = 1):Number{
